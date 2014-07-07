@@ -1,0 +1,51 @@
+
+
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">ScheDo</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#/view">Dashboard</a></li>
+				<li><a href="#">Settings</a></li>
+				<li><a href="#">Profile</a></li>
+				<li><a href="#">Help</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="row">
+		<div style="height: 610px;">
+			<div id="_scheduler" class="dhx_cal_container" style='width: 100%; height: 100%;'>
+				<div class="dhx_cal_navline">
+					<div class="dhx_cal_prev_button">&nbsp;</div>
+					<div class="dhx_cal_next_button">&nbsp;</div>
+					<div class="dhx_cal_today_button"></div>
+					<div class="dhx_cal_date"></div>
+					<div class="dhx_cal_tab dhx_cal_tab_first" name="week_tab" style="right: 140px;"></div>
+					<div class="dhx_cal_tab" name="month_tab" style="right: 76px;"></div>
+				</div>
+				<div class="dhx_cal_header"></div>
+				<div class="dhx_cal_data"></div>
+				<div id="my_form">
+					<label for="tag">Tag</label><input type="text" name="tag" value="" id="tag"><br> <label for="text">Event text </label>
+					<input type="text" name="text" value="" id="text"><br> 
+					<input type="button" name="save" value="Save" id="save" style='width: 100px;' onclick="save_form()"> 
+					<input type="button" name="close" value="Close" id="close" style='width: 100px;' onclick="close_form()"> 
+					<input type="button" name="delete" value="Delete" id="delete" style='width: 100px;' onclick="delete_event()">
+				</div>
+			</div>
+		</div>			
+	</div>
+</div>
+<script type="text/javascript" src="/static/lib/dhtmlxscheduler.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/js/calendar_setting.js"></script>
