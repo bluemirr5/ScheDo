@@ -3,6 +3,7 @@ package controllers
 import (
 	"bitbucket.org/bluemirr/schedo/models"
 	"encoding/json"
+	"fmt"
 	"github.com/astaxie/beego"
 )
 
@@ -20,8 +21,22 @@ func (c *ScheduleController) URLMapping() {
 
 // @router / [get]
 func (this *ScheduleController) GetAll() {
-	this.Data["json"] = models.SuccessResult(nil)
+	userId := this.GetString("userId")
+	startMonth := this.GetString("startMonth")
+	endMonth := this.GetString("endMonth")
+	scheduleList, err := models.SelectSchedule(userId, startMonth, endMonth)
+	if err != nil {
+		this.Data["json"] = models.NewApiResult(404, err, "resource not exist")
+		this.ServeJson()
+	}
+	for _, schedule := range scheduleList {
+		fmt.Println(schedule)
+	}
+	bodyMap := make(map[string]interface{})
+	bodyMap["scheduleList"] = scheduleList
+	this.Data["json"] = models.SuccessResult(bodyMap)
 	this.ServeJson()
+
 }
 
 // @router /:id [get]

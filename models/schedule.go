@@ -2,6 +2,7 @@ package models
 
 import (
 	_ "encoding/json"
+	"fmt"
 	"github.com/astaxie/beego/orm"
 	"time"
 )
@@ -27,9 +28,17 @@ func init() {
 }
 
 func InsertSchedule(schedule Schedule) (int64, error) {
+	fmt.Println(schedule)
 	o := orm.NewOrm()
 	schedule.RegisterDate = time.Now().UnixNano()
 	schedule.ModifyDate = time.Now().UnixNano()
 	id, err := o.Insert(&schedule)
 	return id, err
+}
+
+func SelectSchedule(userId, startMonth, endMonth string) ([]*Schedule, error) {
+	var schedules []*Schedule
+	o := orm.NewOrm()
+	_, err := o.Raw("SELECT id,text,start_date,end_date,start_date_string,tag,user_id,register_date,modify_date FROM SCHEDULE WHERE USER_ID=? AND START_DATE_STRING >= ? AND START_DATE_STRING <= ?", userId, startMonth, endMonth).QueryRows(&schedules)
+	return schedules, err
 }

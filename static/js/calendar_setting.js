@@ -161,6 +161,7 @@ scheduler.attachEvent("onTemplatesReady", function() {
 		  getScheduleParma.endMonth = pEndDate.format("yyyyMM");
 		  
 		  this.selectSchedule(getScheduleParma, function(data){
+			console.log(data)
 			  if(data.resultBody && data.resultBody.scheduleList) {
 				  scheduler.parse(data.resultBody.scheduleList, 'json');
 			  }

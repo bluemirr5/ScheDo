@@ -85,7 +85,6 @@ angular.module('schedo.controllers', [])
 	  }
   })
   .controller('scheduleCtrl', function($scope, scheduleService) {
-	  console.log("Aaaaaaaaaaaa");
 	  scheduler.insertSchedule = scheduleService.insertSchedule;
 	  scheduler.updateSchedule = scheduleService.updateSchedule;
 	  scheduler.deleteSchedule = scheduleService.deleteSchedule;
