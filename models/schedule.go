@@ -7,19 +7,35 @@ import (
 )
 
 type Schedule struct {
-	Id              int64  `json:"id"`
-	Text            string `json:"text"`
-	StartDate       int64  `json:"start_date"`
-	EndDate         int64  `json:"end_date"`
-	StartDateString string `json:"startDateString"`
-	Tag             string `json:"tag"`
-	UserId          string `json:"userId"`
-	RegisterDate    int64
-	ModifyDate      int64
+	Id           int64  `json:"id"`
+	Text         string `json:"text"`
+	StartDate    int64  `json:"start_date"`
+	EndDate      int64  `json:"end_date"`
+	Tag          string `json:"tag"`
+	UserId       string `json:"userId"`
+	StartMonth   string
+	StartYear    int
+	StartWeek    int
+	RegisterDate int64
+	ModifyDate   int64
+	MultidayFlag string
 }
 
 func (this *Schedule) TableName() string {
 	return "SCHEDULE"
+}
+
+func (this *Schedule) FillData() {
+	startDateTime := time.Unix(0, this.StartDate*int64(time.Millisecond))
+	this.StartMonth = startDateTime.Format("200601")
+	year, week := startDateTime.ISOWeek()
+	this.StartYear = year
+	this.StartWeek = week
+	if (this.EndDate - this.StartDate) >= int64(86400000) {
+		this.MultidayFlag = "Y"
+	}
+
+	this.ModifyDate = time.Now().UnixNano()
 }
 
 func init() {
@@ -29,7 +45,7 @@ func init() {
 func InsertSchedule(schedule Schedule) (int64, error) {
 	o := orm.NewOrm()
 	schedule.RegisterDate = time.Now().UnixNano()
-	schedule.ModifyDate = time.Now().UnixNano()
+	schedule.FillData()
 	id, err := o.Insert(&schedule)
 	return id, err
 }
@@ -37,13 +53,20 @@ func InsertSchedule(schedule Schedule) (int64, error) {
 func SelectSchedule(userId, startMonth, endMonth string) ([]*Schedule, error) {
 	var schedules []*Schedule
 	o := orm.NewOrm()
-	_, err := o.Raw("SELECT id,text,start_date,end_date,start_date_string,tag,user_id,register_date,modify_date FROM SCHEDULE WHERE USER_ID=? AND START_DATE_STRING >= ? AND START_DATE_STRING <= ?", userId, startMonth, endMonth).QueryRows(&schedules)
+	schedule := new(Schedule)
+	_, err := o.QueryTable(schedule).Filter("userId", userId).Filter("startMonth__gte", startMonth).Filter("startMonth__lte", endMonth).All(&schedules)
 	return schedules, err
 }
 
 func UpdateSchedule(schedule Schedule) (int64, error) {
 	o := orm.NewOrm()
-	schedule.ModifyDate = time.Now().UnixNano()
+	pschedule := Schedule{Id: schedule.Id}
+	err := o.Read(&pschedule)
+	if err != nil {
+		return -1, err
+	}
+	schedule.FillData()
+	schedule.RegisterDate = pschedule.RegisterDate
 	id, err := o.Update(&schedule)
 	return id, err
 }

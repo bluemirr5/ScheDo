@@ -25,6 +25,8 @@ scheduler.config.month_date = "%Y.%m";
 scheduler.config.default_date = "%Y.%m.%d";
 scheduler.config.day_date = "%D, %m.%d";
 scheduler.config.max_month_events = 3;
+scheduler.config.multi_day = false;
+console.log(scheduler.config)
 
 scheduler.xy.min_event_height = 21;
 
@@ -75,17 +77,17 @@ scheduler.renderEvent = function(container, ev) {
 };
 
 function convertEventToServer(e, id) {
-	  var obj = {};
-	  if(id){
-		  obj.id = id;
-	  }
-	  obj.tag = e.tag;
-	  obj.text = e.text;
-	  obj.userId = userId;
-	  obj.startDateString = e.start_date.format("yyyyMM");
-	  obj.start_date = e.start_date.getTime();
-	  obj.end_date = e.end_date.getTime();
-	  return obj;
+	var obj = {};
+	if(id){
+		obj.id = id;
+	}
+	obj.tag = e.tag;
+	obj.text = e.text;
+	obj.userId = userId;
+	obj.start_date = e.start_date.getTime();
+	obj.end_date = e.end_date.getTime();
+	//obj.startDateString = e.start_date.format("yyyyMM");
+	return obj;
 }
 
 function convertEventToClient(data) {
@@ -102,8 +104,13 @@ function convertEventToClient(data) {
 scheduler.attachEvent("onTemplatesReady", function() {
 	scheduler.attachEvent("onEventAdded", function(id, e) {
 		console.log("onEventAdded : " + id);
+		if(!e.text) {
+			scheduler.deleteEvent(id)
+			alert("Insert Schedule Event Text");
+			return;
+		}
 		var obj = convertEventToServer(e);
-		console.log(obj);		
+		console.log(e);		
 		  this.insertSchedule(obj, function(data){
 		  	console.log(data);
 			 if(data.resultBody) {
@@ -129,7 +136,10 @@ scheduler.attachEvent("onTemplatesReady", function() {
 			  alert('fail');
 		  });
 	  });
-	  scheduler.attachEvent("onEventDeleted", function(id){
+	  scheduler.attachEvent("onEventDeleted", function(id, e){
+		if(!e.text) {
+			return;
+			}
 		  console.log("onEventDeleted : " + id);
 		  
 		  this.deleteSchedule(id, function(data){
@@ -146,8 +156,6 @@ scheduler.attachEvent("onTemplatesReady", function() {
 		  console.log("onEventCancel	 : " + id);
 	  });
 	  scheduler.attachEvent("onEmptyClick", function (date, e){
-		  console.log(date);
-		  console.log(scheduler.getState().new_event);
 		  if(scheduler.getState().mode == "month") {
 			  scheduler.setCurrentView(date, "week");
 		  }
