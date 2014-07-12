@@ -65,28 +65,7 @@ angular.module('schedo.services', []).
 					url:'/api/schedule?userId='+data.userId+'&startMonth='+data.startMonth+'&endMonth='+data.endMonth
 				}).success(success).error(fail);
 			}
-//		,
-//			deleteTodo : function(idx, success, fail) {
-//				$http({
-//					method:'DELETE',
-//					url:'/api/todo/'+idx
-//					//header: '',
-//				}).success(success).error(fail);
-//			},
-//			selectTodoList : function(data, success, fail) {
-//				$http({
-//					method:'POST',
-//					url:'/api/todoList',
-//					data:data
-//				}).success(success).error(fail);
-//			},
-//			updateTodoOrder : function(data, success, fail) {
-//				$http({
-//					method:'POST',
-//					url:'/api/todoOrder/'+data.author,
-//					data:data
-//				}).success(success).error(fail);
-//			}
 		};
 		return serviceObj;
-	});
+	}
+);

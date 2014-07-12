@@ -3,7 +3,6 @@ package controllers
 import (
 	"bitbucket.org/bluemirr/schedo/models"
 	"encoding/json"
-	"fmt"
 	"github.com/astaxie/beego"
 )
 
@@ -25,13 +24,12 @@ func (this *ScheduleController) GetAll() {
 	startMonth := this.GetString("startMonth")
 	endMonth := this.GetString("endMonth")
 	scheduleList, err := models.SelectSchedule(userId, startMonth, endMonth)
+
 	if err != nil {
 		this.Data["json"] = models.NewApiResult(404, err, "resource not exist")
 		this.ServeJson()
 	}
-	for _, schedule := range scheduleList {
-		fmt.Println(schedule)
-	}
+
 	bodyMap := make(map[string]interface{})
 	bodyMap["scheduleList"] = scheduleList
 	this.Data["json"] = models.SuccessResult(bodyMap)
@@ -41,6 +39,9 @@ func (this *ScheduleController) GetAll() {
 
 // @router /:id [get]
 func (this *ScheduleController) Get() {
+	var schedule models.Schedule
+	json.Unmarshal(this.Ctx.Input.CopyBody(), &schedule)
+
 	this.Data["json"] = models.SuccessResult(nil)
 	this.ServeJson()
 }
@@ -49,20 +50,38 @@ func (this *ScheduleController) Get() {
 func (this *ScheduleController) Post() {
 	var schedule models.Schedule
 	json.Unmarshal(this.Ctx.Input.CopyBody(), &schedule)
-	models.InsertSchedule(schedule)
 
-	this.Data["json"] = models.SuccessResult(nil)
+	id, _ := models.InsertSchedule(schedule)
+	bodyMap := make(map[string]interface{})
+	bodyMap["scheduleId"] = id
+
+	this.Data["json"] = models.SuccessResult(bodyMap)
 	this.ServeJson()
 }
 
 // @router /:id [put]
 func (this *ScheduleController) Put() {
-	this.Data["json"] = models.SuccessResult(nil)
+	id, _ := this.GetInt(":id")
+	var schedule models.Schedule
+	json.Unmarshal(this.Ctx.Input.CopyBody(), &schedule)
+	schedule.Id = id
+
+	pid, _ := models.UpdateSchedule(schedule)
+	bodyMap := make(map[string]interface{})
+	bodyMap["scheduleId"] = pid
+
+	this.Data["json"] = models.SuccessResult(bodyMap)
 	this.ServeJson()
 }
 
 // @router /:id [delete]
 func (this *ScheduleController) Delete() {
+	id, _ := this.GetInt(":id")
+	pid, _ := models.DeleteSchedule(id)
+
+	bodyMap := make(map[string]interface{})
+	bodyMap["scheduleId"] = pid
+
 	this.Data["json"] = models.SuccessResult(nil)
 	this.ServeJson()
 }

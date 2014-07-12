@@ -74,7 +74,7 @@ scheduler.renderEvent = function(container, ev) {
 	  return true; //required, true - display a custom form, false - the default form
 };
 
-function convertEvent(e, id) {
+function convertEventToServer(e, id) {
 	  var obj = {};
 	  if(id){
 		  obj.id = id;
@@ -83,16 +83,27 @@ function convertEvent(e, id) {
 	  obj.text = e.text;
 	  obj.userId = userId;
 	  obj.startDateString = e.start_date.format("yyyyMM");
-	  obj.start_date = e.start_date;
-	  obj.end_date = e.end_date;
+	  obj.start_date = e.start_date.getTime();
+	  obj.end_date = e.end_date.getTime();
 	  return obj;
 }
 
+function convertEventToClient(data) {
+	var obj = {};
+	obj.id = data.id;
+	obj.tag = data.tag;
+	obj.text = data.text;
+	obj.userId = data.userId;
+	obj.start_date = new Date(data.start_date);
+	obj.end_date = new Date(data.end_date);
+	return obj;
+}
+
 scheduler.attachEvent("onTemplatesReady", function() {
-	  scheduler.attachEvent("onEventAdded", function(id, e) {
-		  console.log("onEventAdded : " + id);
-		  var obj = convertEvent(e);
-			console.log(obj);		
+	scheduler.attachEvent("onEventAdded", function(id, e) {
+		console.log("onEventAdded : " + id);
+		var obj = convertEventToServer(e);
+		console.log(obj);		
 		  this.insertSchedule(obj, function(data){
 		  	console.log(data);
 			 if(data.resultBody) {
@@ -106,7 +117,7 @@ scheduler.attachEvent("onTemplatesReady", function() {
 	  });
 	  scheduler.attachEvent("onEventChanged", function(id,e){
 		  console.log("onEventChanged : " + id);
-		  var obj = convertEvent(e, id);
+		  var obj = convertEventToServer(e, id);
 		  
 		  this.updateSchedule(obj, function(data){
 		  	console.log(data);
@@ -163,7 +174,12 @@ scheduler.attachEvent("onTemplatesReady", function() {
 		  this.selectSchedule(getScheduleParma, function(data){
 			console.log(data)
 			  if(data.resultBody && data.resultBody.scheduleList) {
-				  scheduler.parse(data.resultBody.scheduleList, 'json');
+				var targetList = [];
+				for(var i = 0; i < data.resultBody.scheduleList.length; i++) {
+					var schedule = data.resultBody.scheduleList[i];
+					targetList.push(convertEventToClient(schedule))
+				}
+				  scheduler.parse(targetList, 'json');
 			  }
 		  }, 
 		  function(){
