@@ -1,6 +1,7 @@
 'use strict';
 
 var partialPath = "static/partials";
+var userId = 'testUser';//TODO 추후 교체
 
 Date.prototype.format = function(f) {
     if (!this.valueOf()) return " ";
@@ -33,14 +34,16 @@ String.prototype.zf = function(len){return "0".string(len - this.length) + this;
 Number.prototype.zf = function(len){return this.toString().zf(len);};
 
 angular.module('schedo', [
-//  'myApp.filters',
-//  'myApp.directives',
 	'ngRoute',
 	'schedo.services',
-	'schedo.controllers'
+	'schedo.controllers',
+	'schedo.directives'
+	//  'myApp.filters',
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/cal', {templateUrl: partialPath+'/calendar.html', controller: 'scheduleCtrl'});
-  $routeProvider.when('/view', {templateUrl: partialPath+'/partial2.html', controller: 'todoCtrl'});
-  $routeProvider.otherwise({redirectTo: '/cal'});
+	$routeProvider.when('/', {templateUrl: partialPath+'/calendar.html', controller: 'scheduleCtrl'});
+	$routeProvider.when('/calendar', {templateUrl: partialPath+'/calendar.html', controller: 'scheduleCtrl'});
+	$routeProvider.when('/statistics', {templateUrl: partialPath+'/statistics.html', controller: 'statisticsCtrl'});
+	$routeProvider.when('/week', {templateUrl: partialPath+'/week.html', controller: 'weekCtrl'});
+	$routeProvider.otherwise({redirectTo: '/'});
 }]);

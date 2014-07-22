@@ -3,6 +3,7 @@ package controllers
 import (
 	"bitbucket.org/bluemirr/schedo/models"
 	"encoding/json"
+	"fmt"
 	"github.com/astaxie/beego"
 )
 
@@ -51,7 +52,11 @@ func (this *ScheduleController) Post() {
 	var schedule models.Schedule
 	json.Unmarshal(this.Ctx.Input.CopyBody(), &schedule)
 
-	id, _ := models.InsertSchedule(schedule)
+	id, err := models.InsertSchedule(schedule)
+	if err != nil {
+		this.Data["json"] = models.NewApiResult(500, err, "resource not exist")
+		this.ServeJson()
+	}
 	bodyMap := make(map[string]interface{})
 	bodyMap["scheduleId"] = id
 
@@ -83,5 +88,24 @@ func (this *ScheduleController) Delete() {
 	bodyMap["scheduleId"] = pid
 
 	this.Data["json"] = models.SuccessResult(nil)
+	this.ServeJson()
+}
+
+// @router /month [get]
+func (this *ScheduleController) SelectMonthStatistics() {
+	userId := this.GetString("userId")
+	month := this.GetString("month")
+
+	statisticsList, err := models.SelectMonthStatistics(userId, month)
+
+	if err != nil {
+		fmt.Println(err)
+		this.Data["json"] = models.NewApiResult(404, err, "resource not exist")
+		this.ServeJson()
+	}
+
+	bodyMap := make(map[string]interface{})
+	bodyMap["statisticsList"] = statisticsList
+	this.Data["json"] = models.SuccessResult(bodyMap)
 	this.ServeJson()
 }

@@ -15,8 +15,6 @@ function delete_event() {
 	scheduler.deleteEvent(event_id);
 }
 
-
-var userId = 'testUser';//TODO 추후 교체
 scheduler.config.time_step = 30;
 scheduler.config.details_on_create = true;
 scheduler.config.details_on_dblclick = true;

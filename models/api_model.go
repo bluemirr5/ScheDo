@@ -8,7 +8,7 @@ type ApiResult struct {
 
 func NewApiResult(code int, body interface{}, message string) *ApiResult {
 	result := new(ApiResult)
-	result.ResultBody = code
+	result.ResultCode = code
 	result.ResultBody = body
 	result.ResultMessage = message
 	return result

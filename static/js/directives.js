@@ -3,9 +3,13 @@
 /* Directives */
 
 
-angular.module('myApp.directives', []).
-  directive('appVersion', ['version', function(version) {
-    return function(scope, elm, attrs) {
-      elm.text(version);
+angular.module('schedo.directives', []).
+  directive('menu', function() {
+    return  {
+      	templateUrl:partialPath+"/menu.html",
+		restrict:"AE",
+		transclude:true,
+		scope:true//,
+		//controller:function link($scope, $elements, $attrs, $transclude){console.log("link");}
     };
-  }]);
+  });
