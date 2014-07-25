@@ -27,7 +27,7 @@ func (this *Schedule) TableName() string {
 	return "SCHEDULE"
 }
 
-func (this *Schedule) FillData() {
+func (this *Schedule) fillSystemData() {
 	startDateTime := time.Unix(0, this.StartDate*int64(time.Millisecond))
 	this.StartMonth = startDateTime.Format("200601")
 	this.StartDay = startDateTime.Format("20060102")
@@ -50,7 +50,7 @@ func init() {
 func InsertSchedule(schedule Schedule) (int64, error) {
 	o := orm.NewOrm()
 	schedule.RegisterDate = time.Now().UnixNano()
-	schedule.FillData()
+	schedule.fillSystemData()
 	id, err := o.Insert(&schedule)
 	return id, err
 }
@@ -70,7 +70,7 @@ func UpdateSchedule(schedule Schedule) (int64, error) {
 	if err != nil {
 		return -1, err
 	}
-	schedule.FillData()
+	schedule.fillSystemData()
 	schedule.RegisterDate = pschedule.RegisterDate
 	id, err := o.Update(&schedule)
 	return id, err

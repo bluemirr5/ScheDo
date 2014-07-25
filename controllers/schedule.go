@@ -11,14 +11,6 @@ type ScheduleController struct {
 	beego.Controller
 }
 
-func (c *ScheduleController) URLMapping() {
-	c.Mapping("GetAll", c.GetAll)
-	c.Mapping("Get", c.Get)
-	c.Mapping("Post", c.Post)
-	c.Mapping("Put", c.Put)
-	c.Mapping("Delete", c.Delete)
-}
-
 // @router / [get]
 func (this *ScheduleController) GetAll() {
 	userId := this.GetString("userId")
@@ -35,7 +27,6 @@ func (this *ScheduleController) GetAll() {
 	bodyMap["scheduleList"] = scheduleList
 	this.Data["json"] = models.SuccessResult(bodyMap)
 	this.ServeJson()
-
 }
 
 // @router /:id [get]
@@ -54,7 +45,7 @@ func (this *ScheduleController) Post() {
 
 	id, err := models.InsertSchedule(schedule)
 	if err != nil {
-		this.Data["json"] = models.NewApiResult(500, err, "resource not exist")
+		this.Data["json"] = models.NewApiResult(500, err, "not operated")
 		this.ServeJson()
 	}
 	bodyMap := make(map[string]interface{})

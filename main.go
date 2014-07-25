@@ -12,6 +12,7 @@ func main() {
 }
 
 func init() {
+	orm.Debug = true
 	orm.RegisterDriver("mysql", orm.DR_MySQL)
 	orm.RegisterDataBase("default", "mysql", "schedo:123434@tcp(bluemirr.kr:3306)/ScheDo?charset=utf8")
 	orm.SetMaxOpenConns("default", 30)
