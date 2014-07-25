@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"bitbucket.org/bluemirr/schedo/models"
 	"github.com/astaxie/beego"
 )
 
@@ -14,5 +15,13 @@ func (c *MainController) URLMapping() {
 
 // @router / [get]
 func (this *MainController) Main() {
-	this.TplNames = "index.html"
+	v := this.GetSession("user")
+	if v != nil {
+		user := v.(*models.User)
+		this.Data["userId"] = user.Id
+		this.Data["userName"] = user.Name
+		this.TplNames = "index.html"
+	} else {
+		this.TplNames = "login.html"
+	}
 }

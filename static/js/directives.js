@@ -4,12 +4,13 @@
 
 
 angular.module('schedo.directives', []).
-  directive('menu', function() {
+directive('menu', [function($rootScope) {
     return  {
-      	templateUrl:partialPath+"/menu.html",
-		restrict:"AE",
-		transclude:true,
-		scope:true//,
-		//controller:function link($scope, $elements, $attrs, $transclude){console.log("link");}
-    };
-  });
+		templateUrl : partialPath+"/directive/menu.html",
+		restrict : "AE",
+		transclude : true,
+		scope : true,
+		link : function link(scope) {
+		}
+	};
+}]);

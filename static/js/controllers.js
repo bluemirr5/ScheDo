@@ -2,23 +2,24 @@
 
 /* Controllers */
 angular.module('schedo.controllers', [])
-.controller('scheduleCtrl', function($scope, scheduleService) {
+.controller('scheduleCtrl', function($scope, $rootScope, scheduleService) {
 	scheduler.insertSchedule = scheduleService.insertSchedule;
 	scheduler.updateSchedule = scheduleService.updateSchedule;
 	scheduler.deleteSchedule = scheduleService.deleteSchedule;
 	scheduler.selectSchedule = scheduleService.selectSchedule;
+	scheduler.userId = $rootScope.user.userId;
 	scheduler.init('_scheduler', new Date(), "month");
 })
-.controller('statisticsCtrl', function($scope, scheduleService){
+.controller('statisticsCtrl', function($scope, $rootScope, scheduleService){
 	var now = new Date();
 	$scope.selectedYear = now.format("yyyy");
 	$scope.selectedMonth = now.format("MM");
-	$scope.years = makeYear();
+	$scope.years = makeYearBeforeAfter();
 	
 	$scope.getData = function() {
 		
 		var getStatisticsParma = {};
-		getStatisticsParma.userId = userId;
+		getStatisticsParma.userId = $rootScope.user.userId;
 		getStatisticsParma.month = $scope.selectedYear + $scope.selectedMonth
 		
 		scheduleService.selectMonthStatistics(getStatisticsParma, function(data){
@@ -36,7 +37,7 @@ angular.module('schedo.controllers', [])
 				for(var k in tags) {
 					var viewModel = {};
 					viewModel.tag = k;
-					viewModel.statistics = makeEmptyDateObj($scope.selectedYear, $scope.selectedMonth);
+					viewModel.statistics = makeEmptyDateObjList($scope.selectedYear, $scope.selectedMonth);
 					viewModel.totalDuration = 0;
 					
 					for(var i = 0; i < viewModel.statistics.length; i++) {
@@ -62,11 +63,9 @@ angular.module('schedo.controllers', [])
 	
 	$scope.getData();
 	
-})
-.controller('weekCtrl', function($scope, scheduleService){
 });
 
-function makeEmptyDateObj(year, month) {
+function makeEmptyDateObjList(year, month) {
 	var displayDateList = [];
 	
 	var formakeDate = new Date();
@@ -92,7 +91,7 @@ function makeEmptyDateObj(year, month) {
 	return displayDateList;
 }
 
-function makeYear() {
+function makeYearBeforeAfter() {
 	var years = [];
 	var yearDate = new Date();
 	yearDate.setYear(yearDate.getFullYear()-5)

@@ -1,7 +1,6 @@
 'use strict';
 
 var partialPath = "static/partials";
-var userId = 'testUser';//TODO 추후 교체
 
 Date.prototype.format = function(f) {
     if (!this.valueOf()) return " ";
@@ -33,6 +32,23 @@ String.prototype.string = function(len){var s = '', i = 0; while (i++ < len) { s
 String.prototype.zf = function(len){return "0".string(len - this.length) + this;};
 Number.prototype.zf = function(len){return this.toString().zf(len);};
 
+var Include = {
+    JS: function (fileName){
+        var JS  = document.createElement('script');
+        JS.type = 'text/javascript';  
+        JS.src  = '/static/js/' + fileName + '.js';   //Path of your Javascript files
+        document.getElementsByTagName('head')[0].appendChild(JS);
+    },
+    CSS: function (fileName){
+        var CSS   = document.createElement('link');
+        CSS.rel   = 'stylesheet';
+        CSS.type  = 'text/css';
+        CSS.href  = '/static/css/' + fileName + '.css'; //Path of your Stylesheet files
+        CSS.media = 'screen';
+        document.getElementsByTagName('head')[0].appendChild(CSS);        
+    }
+};
+
 angular.module('schedo', [
 	'ngRoute',
 	'schedo.services',
@@ -44,6 +60,5 @@ config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/', {templateUrl: partialPath+'/calendar.html', controller: 'scheduleCtrl'});
 	$routeProvider.when('/calendar', {templateUrl: partialPath+'/calendar.html', controller: 'scheduleCtrl'});
 	$routeProvider.when('/statistics', {templateUrl: partialPath+'/statistics.html', controller: 'statisticsCtrl'});
-	$routeProvider.when('/week', {templateUrl: partialPath+'/week.html', controller: 'weekCtrl'});
 	$routeProvider.otherwise({redirectTo: '/'});
 }]);

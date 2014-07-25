@@ -3,7 +3,6 @@ package controllers
 import (
 	"bitbucket.org/bluemirr/schedo/models"
 	"encoding/json"
-	"fmt"
 	"github.com/astaxie/beego"
 )
 
@@ -90,7 +89,6 @@ func (this *ScheduleController) SelectMonthStatistics() {
 	statisticsList, err := models.SelectMonthStatistics(userId, month)
 
 	if err != nil {
-		fmt.Println(err)
 		this.Data["json"] = models.NewApiResult(404, err, "resource not exist")
 		this.ServeJson()
 	}

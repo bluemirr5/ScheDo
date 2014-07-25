@@ -9,28 +9,36 @@
 
 <title>ScheDo</title>
 
-<link rel="stylesheet" type="text/css" href="/static/bower_components/bootstrap-css/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/static/libs/bootstrap-css/css/bootstrap.css" />
 <link rel="stylesheet" type="text/css" href="/static/lib/dhtmlxscheduler.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/calendar_setting.css" />
 <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
 
-<script type="text/javascript" src="/static/bower_components/jquery/dist/jquery.js"></script>
-<script type="text/javascript" src="/static/bower_components/angular/angular.js"></script>
-<script type="text/javascript" src="/static/bower_components/angular/angular-route.min.js"></script>
+<script type="text/javascript" src="/static/libs/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/static/libs/angular/angular.min.js"></script>
+<script type="text/javascript" src="/static/libs/angular/angular-route.min.js"></script>
 
 <script type="text/javascript" src="/static/js/app.js"></script>
 <script type="text/javascript" src="/static/js/controllers.js"></script>
 <script type="text/javascript" src="/static/js/services.js"></script>
 <script type="text/javascript" src="/static/js/directives.js"></script>
 
+<script type="text/javascript">
+function MainCtrl($scope, $rootScope) {
+	$rootScope.user = {};
+	$rootScope.user.userId = '<<? .userId ?>>'
+	$rootScope.user.userName = '<<? .userName ?>>'
+}
+</script>
+
 </head>
 
-<body>
-	
+<body ng-controller="MainCtrl">
+	<menu></menu>
 	<ng-view></ng-view>
 	<!-- Bootstrap core JavaScript
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="/static/bower_components/bootstrap-css/js/bootstrap.min.js"></script>
+	<script src="/static/libs/bootstrap-css/js/bootstrap.min.js"></script>
 </body>
 </html>
