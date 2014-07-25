@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>ScheDo</title>
+
+<link rel="stylesheet" type="text/css" href="/static/libs/bootstrap-css/css/bootstrap.css" />
+
+<script type="text/javascript" src="/static/libs/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/static/libs/angular/angular.min.js"></script>
+
+<script type="text/javascript">
+	function loginCtrl($scope, $http, $rootScope, $location){
+		$scope.login = function(){
+			if($scope.user && $scope.user.id && $scope.user.password) {
+				 $http({
+			        url: "/api/user/auth",
+			        data: JSON.stringify($scope.user),
+			        method: 'POST',
+			        headers : {'Content-Type':'application/json; charset=UTF-8'}	
+			    }).success(function(data){
+					if(data.resultCode == 200) {
+						window.location.reload();	
+					} else {
+						alert("insert correct info")
+					}
+			    }).error(function(err){"ERR", console.log(err)})
+			} else {
+				alert("insert your id or password")
+			}
+		};
+	}
+</script>
+
+</head>
+
+<body>
+	<div style="margin-top:140px;" ng-controller="loginCtrl">
+		<div class="center-block" style="width:400px;">
+			<h2>Login</h2>
+			<hr/>
+		</div>
+		<form class="form-horizontal center-block" role="form" style="width:400px;">
+			<div class="form-group">
+				<label for="userID" class="col-sm-2 control-label">ID</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="userID" placeholder="ID" ng-model="user.id">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+				<div class="col-sm-10">
+					<input type="password" class="form-control" id="inputPassword3" placeholder="Password" ng-model="user.password">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-default" ng-click="login()">Sign in</button>
+				</div>
+			</div>
+		</form>
+	</div>
+<body>
