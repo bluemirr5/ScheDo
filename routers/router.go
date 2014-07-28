@@ -19,6 +19,11 @@ func init() {
 				&controllers.ScheduleController{},
 			),
 		),
+		beego.NSNamespace("/project",
+			beego.NSInclude(
+				&controllers.ProjectController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 }

@@ -10,6 +10,9 @@ angular.module('schedo.controllers', [])
 	scheduler.userId = $rootScope.user.userId;
 	scheduler.init('_scheduler', new Date(), "month");
 })
+.controller('projectCtrl', function($scope, $rootScope, scheduleService) {
+	
+})
 .controller('statisticsCtrl', function($scope, $rootScope, scheduleService){
 	var now = new Date();
 	$scope.selectedYear = now.format("yyyy");
@@ -53,7 +56,6 @@ angular.module('schedo.controllers', [])
 					}					
 					$scope.viewModelList.push(viewModel);
 				}
-				console.log($scope.viewModelList);
 			}
 		}, 
 		function(){

@@ -60,5 +60,6 @@ config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/', {templateUrl: partialPath+'/calendar.html', controller: 'scheduleCtrl'});
 	$routeProvider.when('/calendar', {templateUrl: partialPath+'/calendar.html', controller: 'scheduleCtrl'});
 	$routeProvider.when('/statistics', {templateUrl: partialPath+'/statistics.html', controller: 'statisticsCtrl'});
+	$routeProvider.when('/project', {templateUrl: partialPath+'/project.html', controller: 'projectCtrl'});
 	$routeProvider.otherwise({redirectTo: '/'});
 }]);

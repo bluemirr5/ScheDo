@@ -42,16 +42,19 @@ func (this *UserController) Post() {
 
 // @router / [put]
 func (this *UserController) Put() {
+	//TODO
 	bodyMap := make(map[string]interface{})
 	bodyMap["userId"] = "id"
 	this.Data["json"] = models.SuccessResult(bodyMap)
 	this.ServeJson()
 }
 
-// @router / [delete]
+// @router /:id [delete]
 func (this *UserController) Delete() {
+	id := this.GetString(":id")
+	models.DeleteUser(id)
 	bodyMap := make(map[string]interface{})
-	bodyMap["userId"] = "id"
+	bodyMap["delete"] = "OK"
 	this.Data["json"] = models.SuccessResult(bodyMap)
 	this.ServeJson()
 }
