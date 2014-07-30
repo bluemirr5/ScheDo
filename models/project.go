@@ -2,7 +2,7 @@ package models
 
 import (
 	_ "encoding/json"
-	"fmt"
+	//"fmt"
 	"github.com/astaxie/beego/orm"
 	"time"
 )
@@ -45,21 +45,23 @@ func (this *ProjectRelMember) TableName() string {
 
 func (this *ProjectParam) InsertProject() error {
 	var err error
-	var projectId int64
+	//var projectId int64
 	o := orm.NewOrm()
 	err = o.Begin()
 
-	projectId, err = this.Insert()
+	_, err = this.Insert()
 
 	members := this.Members
 
 	memberCount := len(members)
+	var memberList []ProjectRelMember
 	for i := 0; i < memberCount; i++ {
 		member := members[i]
-		member.ProjectId = projectId
-		fmt.Println(member)
+		member.ProjectId = this.Id
+		memberList = append(memberList, member)
 	}
-	_, err = o.InsertMulti(memberCount, members)
+
+	_, err = o.InsertMulti(memberCount, memberList)
 
 	if err != nil {
 		err = o.Rollback()

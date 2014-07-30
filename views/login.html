@@ -19,26 +19,26 @@
 		$scope.login = function(){
 			if($scope.user && $scope.user.id && $scope.user.password) {
 				 $http({
-			        url: "/api/user/auth",
+			        url: "/auth",
 			        data: JSON.stringify($scope.user),
 			        method: 'POST',
 			        headers : {'Content-Type':'application/json; charset=UTF-8'}	
 			    }).success(function(data){
 					if(data.resultCode == 200) {
-						window.location.reload();	
+						window.location.reload();
 					} else {
-						alert("insert correct info")
+						alert("insert correct info");
 					}
-			    }).error(function(err){"ERR", console.log(err)})
+			    }).error(function(err){
+					alert("insert correct info");
+				})
 			} else {
-				alert("insert your id or password")
+				alert("insert your id or password");
 			}
 		};
 	}
 </script>
-
 </head>
-
 <body>
 	<div style="margin-top:140px;" ng-controller="loginCtrl">
 		<div class="center-block" style="width:400px;">

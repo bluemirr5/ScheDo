@@ -58,31 +58,3 @@ func (this *UserController) Delete() {
 	this.Data["json"] = models.SuccessResult(bodyMap)
 	this.ServeJson()
 }
-
-// @router /auth [post]
-func (this *UserController) Auth() {
-	var user models.User
-	parseErr := json.Unmarshal(this.Ctx.Input.CopyBody(), &user)
-	if parseErr != nil {
-		this.Data["json"] = models.NewApiResult(400, parseErr, "bad request")
-		this.ServeJson()
-	}
-
-	selectedUser, err := models.SelectUser(user.Id)
-
-	if err != nil || selectedUser.Password != user.Password {
-		this.Data["json"] = models.NewApiResult(401, err, "not auth")
-		this.ServeJson()
-	} else {
-		this.SetSession("user", selectedUser)
-		this.Data["json"] = models.SuccessResult(selectedUser)
-		this.ServeJson()
-	}
-
-}
-
-// @router /logout [get]
-func (this *UserController) Logout() {
-	this.SetSession("user", nil)
-	this.Redirect("/", 302)
-}

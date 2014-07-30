@@ -70,3 +70,7 @@ html, body {
 	height: 10px;
 	cursor: pointer;
 }
+
+.dhx_cal_container * {
+	box-sizing: content-box;
+}
