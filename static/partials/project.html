@@ -1,6 +1,5 @@
 <style type="text/css">
 .black-overlay{
-	display: none;
 	position: absolute;
 	top: 0%;
 	left: 0%;
@@ -12,8 +11,7 @@
 	opacity:.80;
 	filter: alpha(opacity=80);
 }
-.white-content {
-	display: none;
+.popup-content {
 	position: absolute;
 	top: 25%;
 	left: 25%;
@@ -26,21 +24,13 @@
 	overflow: auto;
 }
 </style>
-<script>
-function openPopup() {
-	document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block';
-}
-function closePopup() {
-	document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none';
-}
-</script>
-<div class="container-fluid statistics" ng-controller="projectCtrl">
+<div class="container-fluid statistics">
 	<div class="panel panel-default" style="margin-top:30px">
 		<div class="panel-heading">
-			<span>프로젝트 관리</span>
+			<span>Project Management</span>
 			<button class="btn btn-primary btn-xs"
-			onclick="openPopup()"
-			>등록</button>
+			ng-click="showPopup = true"
+			>new</button>
 		</div>
 		<div class="panel-body">
 			<ul>
@@ -52,10 +42,10 @@ function closePopup() {
 			</ul>
 		</div>
 	</div>
-	<div id="popup">
-		<div id="light" class="white-content">
+	<div id="popup" ng-show="showPopup" ng-init="showPopup=false">
+		<div id="light" class="popup-content">
 			<p class="layerPopup">
-				<a href="javascript:void(0)" onclick="closePopup()">Close</a>
+				<a href="javascript:void(0)" ng-click="showPopup = false">Close</a>
 			</p>
 			<form class="form-horizontal center-block" role="form">
 				<div class="form-group">
@@ -82,7 +72,7 @@ function closePopup() {
 				</div>
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
-						<button type="submit" class="btn btn-default" ng-click="saveProject()">Save</button>
+						<button type="submit" class="btn btn-default" ng-click="saveProject();showPopup = false">Save</button>
 					</div>
 				</div>
 			</form>

@@ -36,7 +36,42 @@ angular.module('schedo.services', []).
 					method:'GET',
 					url:'/api/schedule/month?userId='+data.userId+'&month='+data.month
 				}).success(success).error(fail);
-			}
+			},
+			makeEmptyDateObjList : function(year, month) {
+				var displayDateList = [];
+				
+				var formakeDate = new Date();
+				formakeDate.setYear(year);
+				formakeDate.setMonth(month-1);
+				formakeDate.setDate(1);
+				
+				while(formakeDate.format("MM") == month) {
+					var obj = {}
+					obj.year = formakeDate.format("yyyy");
+					obj.month = formakeDate.format("MM");
+					obj.date = formakeDate.format("dd");
+					if(formakeDate.getDay() == 0 || formakeDate.getDay() == 6) {
+						obj.dayType = "holyday";
+					} else {
+						obj.dayType = "normalday";
+					}
+					
+					obj.fullDate = formakeDate.format("yyyyMMdd");
+					formakeDate.setDate(formakeDate.getDate()+1)
+					displayDateList.push(obj);
+				}	
+				return displayDateList;
+			},
+			makeYearBeforeAfter : function() {
+				var years = [];
+				var yearDate = new Date();
+				yearDate.setYear(yearDate.getFullYear()-5)
+				for(var i = 0; i < 10; i++) {
+					years.push(yearDate.format("yyyy"));
+					yearDate.setFullYear(yearDate.getFullYear()+1);
+				}
+				return years
+			},
 		};
 		return serviceObj;
 	}).
@@ -47,6 +82,12 @@ angular.module('schedo.services', []).
 					method:'POST',
 					url:'/api/project',
 					data:data
+				}).success(success).error(fail);
+			},
+			selectService : function(success, fail) {
+				$http({
+					method:'GET',
+					url:'/api/project/all'
 				}).success(success).error(fail);
 			}
 		};
