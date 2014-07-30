@@ -3,11 +3,25 @@ package controllers
 import (
 	"bitbucket.org/bluemirr/schedo/models"
 	"encoding/json"
+	"fmt"
 	"github.com/astaxie/beego"
 )
 
 type ProjectController struct {
 	beego.Controller
+}
+
+// @router /all [get]
+func (this *ProjectController) GetAll() {
+	v := this.GetSession("user")
+	userInfo := v.(*models.User)
+
+	fmt.Println(userInfo.Id)
+
+	bodyMap := make(map[string]interface{})
+	bodyMap["userId"] = "id"
+	this.Data["json"] = models.SuccessResult(bodyMap)
+	this.ServeJson()
 }
 
 // @router / [get]
