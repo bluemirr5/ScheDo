@@ -39,4 +39,16 @@ angular.module('schedo.services', []).
 			}
 		};
 		return serviceObj;
+	}).
+	factory('projectService', function($http){
+		var serviceObj = {
+			insertProject : function(data, success, fail) {
+				$http({
+					method:'POST',
+					url:'/api/project',
+					data:data
+				}).success(success).error(fail);
+			}
+		};
+		return serviceObj;
 	});

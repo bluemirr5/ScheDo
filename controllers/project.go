@@ -35,7 +35,7 @@ func (this *ProjectController) Post() {
 	}
 
 	bodyMap := make(map[string]interface{})
-	bodyMap["userId"] = "id"
+	bodyMap["projectId"] = project.Id
 	this.Data["json"] = models.SuccessResult(bodyMap)
 	this.ServeJson()
 }

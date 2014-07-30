@@ -10,8 +10,25 @@ angular.module('schedo.controllers', [])
 	scheduler.userId = $rootScope.user.userId;
 	scheduler.init('_scheduler', new Date(), "month");
 })
-.controller('projectCtrl', function($scope, $rootScope, scheduleService) {
-	
+.controller('projectCtrl', function($scope, $rootScope, projectService) {
+	$scope.saveProject = function() {		
+		if(!$scope.project.members) {
+			$scope.project.members = [];
+		}
+		if(!$scope.project.status) {
+			$scope.project.status = "O";
+		}
+		var selfMember = {};
+		selfMember.memberId = $rootScope.user.userId;
+		selfMember.memberAuthType = "O";
+		$scope.project.members.push(selfMember);
+		projectService.insertProject($scope.project, function(data){
+			
+		}, 
+		function(){
+			alert("insert project fail");
+		});
+	};
 })
 .controller('statisticsCtrl', function($scope, $rootScope, scheduleService){
 	var now = new Date();
