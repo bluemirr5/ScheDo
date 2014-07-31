@@ -11,31 +11,49 @@ angular.module('schedo.controllers', [])
 	scheduler.init('_scheduler', new Date(), "month");
 })
 .controller('projectCtrl', function($scope, $rootScope, projectService) {
-	projectService.selectService(function(data){
-		
-	},
-	function(){
-	});
-	$scope.saveProject = function() {		
+	var getData = function() {
+		projectService.selectService(function(data){
+			if(data.resultCode == 200 && 
+				data.resultBody && 
+				data.resultBody.projectList.length > 0) 
+			{
+				$scope.projectList = data.resultBody.projectList	
+			}
+			
+			console.log(data)
+		},
+		function(){
+		});
+	};
+	$scope.saveProject = function() {
+		//TODO member 관련 추후 추가
+		/* 
 		if(!$scope.project.members) {
 			$scope.project.members = [];
-		}
-		if(!$scope.project.status) {
-			$scope.project.status = "O";
 		}
 		var selfMember = {};
 		selfMember.memberId = $rootScope.user.userId;
 		selfMember.memberAuthType = "O";
 		$scope.project.members.push(selfMember);
+		*/
+		
+		if(!$scope.project.status) {
+			$scope.project.status = "O";
+		}
+		$scope.project.authorId = $rootScope.user.userId;
+		
 		projectService.insertProject($scope.project, function(data){
 			if(data.resultBody && data.resultCode == 200) {
 				$scope.showPopup = false;
+				$scope.project = {status:"O"};
+				getData();
 			}
 		}, 
 		function(){
 			alert("insert project fail");
 		});
 	};
+	getData();
 })
 .controller('statisticsCtrl', function($scope, $rootScope, scheduleService){
 	var now = new Date();
@@ -77,7 +95,7 @@ angular.module('schedo.controllers', [])
 								viewModel.totalDuration += dateData.duration;
 							} 
 						}
-					}					
+					}
 					$scope.viewModelList.push(viewModel);
 				}
 			}

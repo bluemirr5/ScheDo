@@ -3,7 +3,7 @@ package controllers
 import (
 	"bitbucket.org/bluemirr/schedo/models"
 	"encoding/json"
-	"fmt"
+	//"fmt"
 	"github.com/astaxie/beego"
 )
 
@@ -16,10 +16,17 @@ func (this *ProjectController) GetAll() {
 	v := this.GetSession("user")
 	userInfo := v.(*models.User)
 
-	fmt.Println(userInfo.Id)
+	project := new(models.Project)
+	project.AuthorId = userInfo.Id
+
+	projects, err := project.GetAll()
+	if err != nil {
+		this.Data["json"] = models.NewApiResult(500, err, "not operated")
+		this.ServeJson()
+	}
 
 	bodyMap := make(map[string]interface{})
-	bodyMap["userId"] = "id"
+	bodyMap["projectList"] = projects
 	this.Data["json"] = models.SuccessResult(bodyMap)
 	this.ServeJson()
 }

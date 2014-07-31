@@ -12,6 +12,7 @@ type Project struct {
 	Name         string `json:"name"`
 	Description  string `json:"description"`
 	Status       string `json:"status"`
+	AuthorId     string `json:"authorId"`
 	RegisterDate int64
 	ModifyDate   int64
 }
@@ -32,6 +33,10 @@ func (this *Project) TableName() string {
 	return "PROJECT"
 }
 
+func (this *ProjectRelMember) TableName() string {
+	return "PROJECT_REL_MEMBER"
+}
+
 func (this *Project) Insert() (int64, error) {
 	o := orm.NewOrm()
 	this.RegisterDate = time.Now().UnixNano()
@@ -39,13 +44,16 @@ func (this *Project) Insert() (int64, error) {
 	return o.Insert(this)
 }
 
-func (this *ProjectRelMember) TableName() string {
-	return "PROJECT_REL_MEMBER"
+func (this *Project) GetAll() ([]*Project, error) {
+	var projects []*Project
+	o := orm.NewOrm()
+	_, err := o.QueryTable(this).Filter("authorId", this.AuthorId).All(&projects)
+	return projects, err
 }
 
 func (this *ProjectParam) InsertProject() error {
 	var err error
-	//var projectId int64
+
 	o := orm.NewOrm()
 	err = o.Begin()
 
@@ -60,8 +68,9 @@ func (this *ProjectParam) InsertProject() error {
 		member.ProjectId = this.Id
 		memberList = append(memberList, member)
 	}
-
-	_, err = o.InsertMulti(memberCount, memberList)
+	if memberCount > 0 {
+		_, err = o.InsertMulti(memberCount, memberList)
+	}
 
 	if err != nil {
 		err = o.Rollback()
