@@ -84,12 +84,27 @@ angular.module('schedo.services', []).
 					data:data
 				}).success(success).error(fail);
 			},
+			updateProject : function(data, success, fail) {
+				$http({
+					method:'PUT',
+					url:'/api/project',
+					data:data
+				}).success(success).error(fail);
+			},
+			deleteProject : function(data, success, fail) {
+				$http({
+					method:'DELETE',
+					url:'/api/project/'+data.id,
+					data:data
+				}).success(success).error(fail);
+			},
 			selectService : function(success, fail) {
 				$http({
 					method:'GET',
 					url:'/api/project/all'
 				}).success(success).error(fail);
-			}
+			},
+			
 		};
 		return serviceObj;
 	});

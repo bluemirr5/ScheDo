@@ -13,8 +13,8 @@ type Project struct {
 	Description  string `json:"description"`
 	Status       string `json:"status"`
 	AuthorId     string `json:"authorId"`
-	RegisterDate int64
-	ModifyDate   int64
+	RegisterDate int64  `json:"_"`
+	ModifyDate   int64  `json:"_"`
 }
 
 type ProjectRelMember struct {
@@ -77,6 +77,18 @@ func (this *ProjectParam) InsertProject() error {
 	} else {
 		err = o.Commit()
 	}
+	return err
+}
+
+func (this *Project) Update() error {
+	o := orm.NewOrm()
+	_, err := o.Update(this)
+	return err
+}
+
+func (this *Project) Delete() error {
+	o := orm.NewOrm()
+	_, err := o.Delete(this)
 	return err
 }
 

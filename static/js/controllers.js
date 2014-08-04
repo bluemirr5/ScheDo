@@ -19,12 +19,18 @@ angular.module('schedo.controllers', [])
 			{
 				$scope.projectList = data.resultBody.projectList	
 			}
-			
-			console.log(data)
 		},
 		function(){
 		});
 	};
+	$scope.setProject = function(projectIndex) {
+		if(projectIndex >= 0) {
+			$scope.project = $scope.projectList[projectIndex];
+			$scope.showPopup = true;	
+		} else {
+			$scope.project = {};
+		}
+	}
 	$scope.saveProject = function() {
 		//TODO member 관련 추후 추가
 		/* 
@@ -41,19 +47,42 @@ angular.module('schedo.controllers', [])
 			$scope.project.status = "O";
 		}
 		$scope.project.authorId = $rootScope.user.userId;
-		
-		projectService.insertProject($scope.project, function(data){
-			if(data.resultBody && data.resultCode == 200) {
-				$scope.showPopup = false;
-				$scope.project = {status:"O"};
-				getData();
-			}
+		if($scope.project.id) {
+			projectService.updateProject($scope.project, function(data){
+				if(data.resultBody && data.resultCode == 200) {
+					$scope.showPopup = false;
+					$scope.project = {status:"O"};
+					getData();
+				}
+			}, 
+			function(){
+				alert("save project fail");
+			});
+		} else {
+			projectService.insertProject($scope.project, function(data){
+				if(data.resultBody && data.resultCode == 200) {
+					$scope.showPopup = false;
+					$scope.project = {status:"O"};
+					getData();
+				}
+			}, 
+			function(){
+				alert("save project fail");
+			});	
+		}	
+	};
+	$scope.deleteProject = function(){
+		projectService.deleteProject($scope.project, function(data){
+			$scope.showPopup = false;
+			$scope.project = {status:"O"};
+			getData();
 		}, 
 		function(){
-			alert("insert project fail");
-		});
+			alert("delete project fail");
+		});	
 	};
 	getData();
+	$scope.setProject(-1);
 })
 .controller('statisticsCtrl', function($scope, $rootScope, scheduleService){
 	var now = new Date();

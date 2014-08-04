@@ -34,7 +34,7 @@
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="project in projectList"><span ng-bind="project.name"></span></li>
+				<li ng-repeat="project in projectList"><a href="javascript:void(0)" ng-click="setProject($index);"><span ng-bind="project.name"></span></a></li>
 			</ul>
 		</div>
 	</div>
@@ -69,6 +69,7 @@
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
 						<button type="submit" class="btn btn-default" ng-click="saveProject();showPopup = false">Save</button>
+						<button type="submit" class="btn btn-default" ng-click="deleteProject();showPopup = false">Delete</button>
 					</div>
 				</div>
 			</form>

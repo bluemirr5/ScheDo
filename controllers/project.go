@@ -63,16 +63,37 @@ func (this *ProjectController) Post() {
 
 // @router / [put]
 func (this *ProjectController) Put() {
+	var project models.ProjectParam
+	parseErr := json.Unmarshal(this.Ctx.Input.CopyBody(), &project)
+	if parseErr != nil {
+		this.Data["json"] = models.NewApiResult(400, parseErr, "bad request")
+		this.ServeJson()
+	}
+
+	err := project.Update()
+	if err != nil {
+		this.Data["json"] = models.NewApiResult(500, err, "not operated")
+		this.ServeJson()
+	}
+
 	bodyMap := make(map[string]interface{})
-	bodyMap["userId"] = "id"
+	bodyMap["projectId"] = project.Id
 	this.Data["json"] = models.SuccessResult(bodyMap)
 	this.ServeJson()
 }
 
-// @router / [delete]
+// @router /:id [delete]
 func (this *ProjectController) Delete() {
+	id, _ := this.GetInt(":id")
+	project := new(models.Project)
+	project.Id = id
+	err := project.Delete()
+	if err != nil {
+		this.Data["json"] = models.NewApiResult(500, err, "not operated")
+		this.ServeJson()
+	}
 	bodyMap := make(map[string]interface{})
-	bodyMap["userId"] = "id"
+	bodyMap["userId"] = project.Id
 	this.Data["json"] = models.SuccessResult(bodyMap)
 	this.ServeJson()
 }
