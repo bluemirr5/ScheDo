@@ -3,6 +3,7 @@ package controllers
 import (
 	"bitbucket.org/bluemirr/schedo/models"
 	"encoding/json"
+	"fmt"
 	"github.com/astaxie/beego"
 )
 
@@ -41,6 +42,8 @@ func (this *ScheduleController) Get() {
 func (this *ScheduleController) Post() {
 	var schedule models.Schedule
 	json.Unmarshal(this.Ctx.Input.CopyBody(), &schedule)
+
+	fmt.Println(schedule)
 
 	id, err := models.InsertSchedule(schedule)
 	if err != nil {

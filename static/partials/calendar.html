@@ -17,7 +17,12 @@
 				<div id="my_form">
 					<p class="head">Insert Your Schedule</p>
 					<div class="body">
-						<label for="tag">Tag</label><input type="text" name="tag" value="" id="tag"><br /><br />
+						<!-- label for="tag">Tag</label><input type="text" name="tag" value="" id="tag"><br /><br / -->
+						<label for="projectId">Project</label>
+						<select id="projectId" name="projectId">
+							<option ng-selected="true" value="-1">----Select Project----</option>
+							<option ng-repeat="project in projectList" value="{{project.id}}">{{project.name}}</option>
+						</select><br /><br />
 						<label for="text">Event text </label><input type="text" name="text" value="" id="text"><br /> <br />
 						<input type="button" name="save" value="Save" id="save" style='width: 100px;' onclick="save_form()"> 
 						<input type="button" name="close" value="Close" id="close" style='width: 100px;' onclick="close_form()"> 

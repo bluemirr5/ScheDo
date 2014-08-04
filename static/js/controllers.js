@@ -2,13 +2,26 @@
 
 /* Controllers */
 angular.module('schedo.controllers', [])
-.controller('scheduleCtrl', function($scope, $rootScope, scheduleService) {
+.controller('scheduleCtrl', function($scope, $rootScope, scheduleService, projectService) {
 	scheduler.insertSchedule = scheduleService.insertSchedule;
 	scheduler.updateSchedule = scheduleService.updateSchedule;
 	scheduler.deleteSchedule = scheduleService.deleteSchedule;
 	scheduler.selectSchedule = scheduleService.selectSchedule;
 	scheduler.userId = $rootScope.user.userId;
-	scheduler.init('_scheduler', new Date(), "month");
+	
+	projectService.selectService(function(data){
+		if(data.resultCode == 200 && 
+			data.resultBody && 
+			data.resultBody.projectList.length >= 0) 
+		{
+			$scope.projectList = data.resultBody.projectList;
+			scheduler.projectList = data.resultBody.projectList;
+			scheduler.init('_scheduler', new Date(), "month");
+		}
+	},
+	function(){
+	});
+	
 })
 .controller('projectCtrl', function($scope, $rootScope, projectService) {
 	var getData = function() {
@@ -43,6 +56,13 @@ angular.module('schedo.controllers', [])
 		$scope.project.members.push(selfMember);
 		*/
 		
+		if(!$scope.project.name) {
+			alert("insert project info");
+			$scope.showPopup = false;
+			$scope.project = {status:"O"};
+			return;
+		}
+		
 		if(!$scope.project.status) {
 			$scope.project.status = "O";
 		}
@@ -54,7 +74,7 @@ angular.module('schedo.controllers', [])
 					$scope.project = {status:"O"};
 					getData();
 				}
-			}, 
+			},
 			function(){
 				alert("save project fail");
 			});
@@ -68,8 +88,8 @@ angular.module('schedo.controllers', [])
 			}, 
 			function(){
 				alert("save project fail");
-			});	
-		}	
+			});
+		}
 	};
 	$scope.deleteProject = function(){
 		projectService.deleteProject($scope.project, function(data){
@@ -97,20 +117,21 @@ angular.module('schedo.controllers', [])
 		getStatisticsParma.month = $scope.selectedYear + $scope.selectedMonth
 		
 		scheduleService.selectMonthStatistics(getStatisticsParma, function(data){
+			console.log(data);
 			if(data.resultBody && data.resultCode == 200) {
 				var tags = {};
 				
 				// get tags
 				for(var i = 0; data.resultBody.statisticsList && i < data.resultBody.statisticsList.length; i++) {
 					var statistics = data.resultBody.statisticsList[i];
-					tags[statistics.Tag] = true;
+					tags[statistics.ProjectId] = true;
 				}
 				
 				// make View Model
 				$scope.viewModelList = [];
 				for(var k in tags) {
 					var viewModel = {};
-					viewModel.tag = k;
+					viewModel.projectId = k;
 					viewModel.statistics = scheduleService.makeEmptyDateObjList($scope.selectedYear, $scope.selectedMonth);
 					viewModel.totalDuration = 0;
 					
@@ -119,7 +140,7 @@ angular.module('schedo.controllers', [])
 						
 						for(var j = 0; j < data.resultBody.statisticsList.length; j++) {
 							var statisticsObj = data.resultBody.statisticsList[j];
-							if(dateData.fullDate == statisticsObj.StartDay && statisticsObj.Tag == viewModel.tag) {
+							if(dateData.fullDate == statisticsObj.StartDay && statisticsObj.ProjectId == viewModel.projectId) {
 								dateData.duration = statisticsObj.Duration/(1000*60*60);
 								viewModel.totalDuration += dateData.duration;
 							} 

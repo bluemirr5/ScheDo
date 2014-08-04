@@ -11,7 +11,7 @@ type Schedule struct {
 	Text         string `json:"text"`
 	StartDate    int64  `json:"start_date"`
 	EndDate      int64  `json:"end_date"`
-	Tag          string `json:"tag"`
+	ProjectId    int64  `json:"projectId"`
 	UserId       string `json:"userId"`
 	StartDay     string
 	StartMonth   string
@@ -88,7 +88,7 @@ func SelectMonthStatistics(userId, month string) ([]orm.Params, error) {
 	query := `
 		SELECT 
 			START_DAY as StartDay,
-			TAG AS Tag, 
+			PROJECT_ID AS ProjectId, 
 			SUM(DURATION) AS Duration
 		FROM 
 			SCHEDULE 
@@ -96,7 +96,7 @@ func SelectMonthStatistics(userId, month string) ([]orm.Params, error) {
 			USER_ID=?
 			AND
 			START_MONTH=?
-		GROUP BY TAG, START_DAY
+		GROUP BY PROJECT_ID, START_DAY
 	`
 	_, err := o.Raw(query, userId, month).Values(&maps)
 	return maps, err
