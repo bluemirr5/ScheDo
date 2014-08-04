@@ -20,10 +20,12 @@ scheduler.config.details_on_create = true;
 scheduler.config.details_on_dblclick = true;
 scheduler.config.start_on_monday = false;
 scheduler.config.month_date = "%Y.%m";
-scheduler.config.default_date = "%Y.%m.%d";
+scheduler.config.default_date = "%m.%d";
+//scheduler.config.default_date = "%Y.%m.%d";
 scheduler.config.day_date = "%D, %m.%d";
 scheduler.config.max_month_events = 3;
 scheduler.config.multi_day = false;
+console.log(scheduler.config);
 
 scheduler.xy.min_event_height = 21;
 
