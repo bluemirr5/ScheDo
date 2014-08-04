@@ -15,7 +15,7 @@ angular.module('schedo.controllers', [])
 		projectService.selectService(function(data){
 			if(data.resultCode == 200 && 
 				data.resultBody && 
-				data.resultBody.projectList.length > 0) 
+				data.resultBody.projectList.length >= 0) 
 			{
 				$scope.projectList = data.resultBody.projectList	
 			}
