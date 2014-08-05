@@ -8,6 +8,7 @@ type User struct {
 	Id       string `orm:"pk" json:"id"`
 	Password string `json:"password"`
 	Name     string `json:"name"`
+	Email    string `json:"email"`
 }
 
 func (this *User) TableName() string {
