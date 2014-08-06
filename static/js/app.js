@@ -32,6 +32,16 @@ String.prototype.string = function(len){var s = '', i = 0; while (i++ < len) { s
 String.prototype.zf = function(len){return "0".string(len - this.length) + this;};
 Number.prototype.zf = function(len){return this.toString().zf(len);};
 
+function clone(destination, source) {
+    for (var property in source) {
+        if (typeof source[property] === "object" && source[property] !== null && destination[property]) { 
+            clone(destination[property], source[property]);
+        } else {
+            destination[property] = source[property];
+        }
+    }
+};
+
 var Include = {
     JS: function (fileName){
         var JS  = document.createElement('script');
@@ -53,7 +63,8 @@ angular.module('schedo', [
 	'ngRoute',
 	'schedo.services',
 	'schedo.controllers',
-	'schedo.directives'
+	'schedo.directives',
+	'ui.bootstrap'
 	//  'myApp.filters',
 ]).
 config(['$routeProvider', function($routeProvider) {

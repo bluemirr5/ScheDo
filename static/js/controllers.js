@@ -24,6 +24,57 @@ angular.module('schedo.controllers', [])
 	
 })
 .controller('projectCtrl', function($scope, $rootScope, projectService) {
+	if(!$scope.project) {
+		$scope.project = {};
+	}
+	$scope.today = function(flagStr) {
+		if(flagStr == "S") {
+			$scope.project.periodStart = new Date();	
+		} else {
+			$scope.project.periodEnd = new Date();
+		}
+	};
+	
+	$scope.clear = function (flagStr) {
+		if(flagStr == "S") {
+			$scope.project.periodStart = null;
+		} else {
+			$scope.project.periodEnd = null;
+		}
+	};
+	
+	// Disable weekend selection
+	$scope.disabled = function(date, mode) {
+		return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+	};
+	
+	$scope.toggleMin = function() {
+		$scope.minDate = $scope.minDate ? null : new Date();
+	};
+	$scope.toggleMin();
+	
+	$scope.open = function($event, flagStr) {
+		$event.preventDefault();
+		$event.stopPropagation();
+		
+		if(flagStr == "S") {
+			$scope.startOpened = true;
+		} else {
+			$scope.endOpened = true;
+		}	
+	};
+	
+	$scope.dateOptions = {
+		formatYear: 'yy',
+		startingDay: 1
+	};
+	
+	$scope.formats = ['yyyy-MM-dd', 'dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+	$scope.format = $scope.formats[0];
+	
+	$scope.project.periodStart = new Date();	
+	$scope.project.periodEnd = new Date();	
+	
 	var getData = function() {
 		projectService.selectService(function(data){
 			if(data.resultCode == 200 && 
@@ -38,10 +89,10 @@ angular.module('schedo.controllers', [])
 	};
 	$scope.setProject = function(projectIndex) {
 		if(projectIndex >= 0) {
-			$scope.project = $scope.projectList[projectIndex];
-			$scope.showPopup = true;	
+			$scope.project = {};			
+			clone($scope.project, $scope.projectList[projectIndex]);
 		} else {
-			$scope.project = {};
+			$scope.project = {status:"O"};
 		}
 	}
 	$scope.saveProject = function() {
