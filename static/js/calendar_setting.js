@@ -96,11 +96,11 @@ scheduler.attachEvent("onTemplatesReady", function() {
 		var ev = scheduler.getEvent(id);
 		scheduler.startLightbox(id, html("my_form"));
 		//html("tag").focus();
-		/*
+		
 		if(ev.text == 'New event') {
 			ev.text = '';
 		}
-		*/
+		
 		html("text").value = ev.text || "";
 		if(ev.projectId > 0) {
 			html("projectId").value = ev.projectId;	
